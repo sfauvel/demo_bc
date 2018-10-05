@@ -44,7 +44,7 @@ public class SimpleWebApp {
                 new Transaction(3, "John", 52, 32),
                 new Transaction(4, "Bob", 43, 87)));
 
-        SimpleWebApp webapp = new SimpleWebApp(9000, new BlockChain(Arrays.asList(b1, b2)));
+        SimpleWebApp webapp = new SimpleWebApp(8080, new BlockChain(Arrays.asList(b1, b2)));
 
         webapp.start();
     }
