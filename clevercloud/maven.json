@@ -1,5 +1,9 @@
  {
+    "build": {
+        "type": "maven",
+        "goal": "install"
+    },
     "deploy": {
-      "goal": "exec:exec"
+        "goal": "exec:exec"
     }
   }
