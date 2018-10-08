@@ -19,19 +19,28 @@ class Transaction extends React.Component {
   render() {
     const tx = this.props.tx 
     const className="transaction"+((this.props.selected)?" selected":"");
-    return <label onClick={this.props.handler} className={className}>{tx.id}: {tx.user}: {tx.x}/{tx.y}</label>
+    return <label onClick={this.props.handler} className={className}>{trunkId(tx.id)}: {tx.user}: {tx.x}/{tx.y}</label>
   }
+}
+
+function trunkId(id) {
+	return ".." +((""+id).substr(5))
 }
 
 class Block extends React.Component {
 	
   render() {
     const block=this.props.block;
+    const branch=this.props.branch-1;
     const className="block"+((this.props.selected)?" selected":"");
    // console.log(block.id + ":" +this.props.selected)
+    //style="margin-left:{branch}em"
+    const branchmargin = {
+    		marginLeft:(branch*3)+"em"
+    };
     return (
-    	<div className={className} onClick={this.props.handler}>
-	        <div>Block: {block.id} from {block.parentId}</div>
+    	<div className={className} style={branchmargin} onClick={this.props.handler}>
+	        <div>Block: {trunkId(block.id)} from {trunkId(block.parentId)}</div>
 	        <div className="blockTransaction">
 	        	{block.transactions.map(tx => (<div key={"tx_" + tx.id}><Transaction tx={tx}/></div>))}
 	        </div>
@@ -79,23 +88,14 @@ class Blockchain extends React.Component {
       .then((data) => {
           this.setState({
              isLoaded: true,
-             blocks: data.blocks,
+             blocks: data.blocks.reverse(),
              transactions: data.lastTransactions,
-             checkedElements: new Set()
+             checkedElements: new Set(),
+             selectedBlock: undefined
            });
       });
   }
-  
-  hashCode(text) {
-	  var hash = 0, i, chr;
-	  if (text.length === 0) return hash;
-	  for (i = 0; i < text.length; i++) {
-	    chr   = text.charCodeAt(i);
-	    hash  = ((hash << 5) - hash) + chr;
-	    hash |= 0; // Convert to 32bit integer
-	  }
-	  return hash;
-	}
+
   
   	buildResponse() {
   		var paramsToSend = {
@@ -129,11 +129,11 @@ class Blockchain extends React.Component {
 
 	   var json = this.buildResponse()
 	   console.log(json);
-	   var value = parseInt(this.hashCode(json)) % 10
-//	   if (value != 0) {
-//		   alert("Try again !");
-//		   return;
-//	   }
+	   var value = parseInt(this.hashCode(json)) % 2
+	   if (value != 0) {
+		   alert("Try again !");
+		   return;
+	   }
 
 	   fetch('/bc/validate', {
 	     method: 'POST',
@@ -186,6 +186,49 @@ class Blockchain extends React.Component {
     
   }	  
  
+  blockBranch(block) {
+//	  console.log("Branch ? " + block.id)
+//	  var branch=1;
+//	  
+//	  var blockBranch = []
+//	  this.state.blocks.forEach(function(element) {
+//		  var b = blockBranch.get(element.parentId)
+//				  
+//		  blockBranch[element.id]=b;
+//	  })
+//	  
+//	  this.state.blocks.every(function(element) {
+//		  console.log("is idem:" + element.id + "==" + block.id)
+//  		 if (element.id==block.id) {
+//  			 console.log("return " + branch)
+//  			 return false;
+// 		 }
+//  		 if (element.parentId==block.parentId) {
+//
+//  			 console.log("inc " + branch)
+//  			 branch++;
+//  		 }
+//  		 return true;
+//  	  		
+// 	   })
+//	 
+//	  console.log("Branch = " + branch)
+//	  return branch;
+	  return 1;
+  }
+  
+  
+  hashCode(text) {
+	  var hash = 0, i, chr;
+	  if (text.length === 0) return hash;
+	  for (i = 0; i < text.length; i++) {
+	    chr   = text.charCodeAt(i);
+	    hash  = ((hash << 5) - hash) + chr;
+	    hash |= 0; // Convert to 32bit integer
+	  }
+	  return hash;
+	}
+  
   render() {
 	  const { isLoaded, blocks, transactions } = this.state;
 	
@@ -193,19 +236,15 @@ class Blockchain extends React.Component {
 	    return <div>Loading...</div>;
 	  } else {
 	    return (
-	    		<div>
-    	  <h1>Display Blockchain</h1>
+	    <div>
+    	  <h1>Blockchain</h1>
     	  <div></div>
 		      <form onSubmit={this.handleSubmit}>
-		      <div>
-		        {blocks.map(block => (
-		        		<div key={"bck_" + block.id}  >
-			        		<Block block={block} 
-			        			selected={this.state.selectedBlock===block.id}
-			        			handler={(e) => this.handlerBlockSelection(block.id, e)}/>
-		        		</div>
-		        		))}
-		      </div>
+		      <label>Proof of work</label><input id="proofOfWork"
+		    	  	size="6"
+		    	  	value={this.state.proofOfWork} 
+		      		onChange={this.handleProofOfWorkChange.bind(this)}/>
+		      <input type="submit" className="button" value="Submit" />
 		      <div>
 		      	{transactions.map(tx => (
 		      			<div key={"txcheck_" + tx.id}>
@@ -214,10 +253,18 @@ class Blockchain extends React.Component {
 			      				handler={(e) => this.handlerTransactionSelection(tx.id, e)}/>
 		      			</div>))}
 		      </div>
-		      <input id="proofOfWork" 
-		    	  	value={this.state.proofOfWork} 
-		      		onChange={this.handleProofOfWorkChange.bind(this)}/>
-		      <input type="submit" value="Submit" />
+		      <div>
+		        {blocks.map(block => (
+		        		<div key={"bck_" + block.id}  >
+			        		<Block block={block}
+			        			branch={this.blockBranch(block)}
+			        			selected={this.state.selectedBlock===block.id}
+			        			handler={(e) => this.handlerBlockSelection(block.id, e)}/>
+		        		</div>
+		        		))}
+		      </div>
+		     
+		     
 	      </form>
 		      </div>);
 	  }
@@ -292,12 +339,11 @@ class Onglet extends React.Component {
     		content = <NameForm />;
     	  }
     	return (
-   	  		<div>
-   	  		<Button onClick={(e) => this.handleClick(e, "A")}>Blockchain</Button>
+    	<div>
    	  		<input type="button" className="button" value="Blockchain" onClick={(e) => this.handleClick(e, "A")}/>
    	  		<input type="button" className="button" value="Add transaction" onClick={(e) => this.handleClick(e, "B")} />
-    	  {content}
-    	  </div>)
+   	  		{content}
+    	</div>)
     }
 }
 

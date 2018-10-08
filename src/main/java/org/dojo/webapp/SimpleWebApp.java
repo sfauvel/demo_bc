@@ -45,19 +45,21 @@ public class SimpleWebApp {
     }
 
     private static BlockChain buildBlockChain() {
-        Block b1 = new Block(5, 0, Arrays.asList(
-                new Transaction(1, "Bob", 2, 45),
-                new Transaction(2, "Bob", 34, 67)));
-        Block b2 = new Block(7, 5, Arrays.asList(
-                new Transaction(3, "John", 52, 32),
-                new Transaction(4, "Bob", 43, 87)));
-        Block b3 = new Block(8, 5, Arrays.asList(
-                new Transaction(3, "John", 52, 33)));
-        Block b4 = new Block(9, 8, Arrays.asList(
-                new Transaction(3, "John", 52, 34)));
-
-        BlockChain blockChain = new BlockChain(Arrays.asList(b1, b2, b3, b4));
-        return blockChain;
+//        Block b1 = new Block(5, 0, Arrays.asList(
+//                new Transaction(1, "Bob", 2, 45),
+//                new Transaction(2, "Bob", 34, 67)));
+//        Block b2 = new Block(7, 5, Arrays.asList(
+//                new Transaction(3, "John", 52, 32),
+//                new Transaction(4, "Bob", 43, 87)));
+//        Block b3 = new Block(8, 5, Arrays.asList(
+//                new Transaction(3, "John", 52, 33)));
+//        Block b4 = new Block(9, 8, Arrays.asList(
+//                new Transaction(3, "John", 52, 34)));
+//        
+//        BlockChain blockChain = new BlockChain(Arrays.asList(b1, b2, b3, b4));
+//        return blockChain;
+        
+        return new BlockChain(Arrays.asList(new Block(timestamp(), 0, Arrays.asList())));
     }
 
     private int port;
