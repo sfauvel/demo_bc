@@ -180,6 +180,7 @@ console.log(json);
 	    return (
 	    		<div>
     	  <h1>Display Blockchain</h1>
+    	  <div></div>
 		      <form onSubmit={this.handleSubmit}>
 		      <div>
 		        {blocks.map(block => (
@@ -282,8 +283,8 @@ class Onglet extends React.Component {
     	return (
    	  		<div>
    	  		<Button onClick={(e) => this.handleClick(e, "A")}>Blockchain</Button>
-   	  		<input type="button" value="Blockchain" onClick={(e) => this.handleClick(e, "A")}/>
-   	  		<input type="button" value="Add transaction" onClick={(e) => this.handleClick(e, "B")} />
+   	  		<input type="button" className="button" value="Blockchain" onClick={(e) => this.handleClick(e, "A")}/>
+   	  		<input type="button" className="button" value="Add transaction" onClick={(e) => this.handleClick(e, "B")} />
     	  {content}
     	  </div>)
     }

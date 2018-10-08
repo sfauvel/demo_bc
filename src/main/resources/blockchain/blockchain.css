@@ -1,3 +1,4 @@
+ 
  .block {
    display: inline-block;
    width: 300px;
@@ -8,10 +9,12 @@
    margin-bottom: 1em;
    padding: 5px;
  }
+ 
  .block .transaction {
      color:black;
      background:#00e78d;
  }
+ 
  .transaction {
    display: inline-block;
    /*width:200px;*/
@@ -20,9 +23,32 @@
    margin: 2px;
    padding: 2px;
  }
- input {
-     vertical-align: top;
- }
+
  .blockTransaction {
      padding-left: 1em;
  }
+ 
+ input {
+     vertical-align: top;
+ }
+ 
+.button {
+  display:inline-block;
+  padding:0.7em 1.7em;
+  margin:0 0.3em 0.3em 0;
+  border-radius:0.2em;
+  box-sizing: border-box;
+  text-decoration:none;
+  font-family:'Roboto',sans-serif;
+  font-weight:400;
+  color: black;
+  background-color:#00e78d;
+  box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);
+  text-align:center;
+  position:relative;
+}
+
+
+.button:hover {
+  background-color:#00b74d;
+}
