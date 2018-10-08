@@ -1,0 +1,28 @@
+ .block {
+   display: inline-block;
+   width: 300px;
+   background: #00e78d;
+   border-radius: 10px;
+   box-shadow: 5px 5px 5px #00a74d;
+   margin: 3px;
+   margin-bottom: 1em;
+   padding: 5px;
+ }
+ .block .transaction {
+     color:black;
+     background:#00e78d;
+ }
+ .transaction {
+   display: inline-block;
+   /*width:200px;*/
+   background:#dd6a3d;
+   color:white;
+   margin: 2px;
+   padding: 2px;
+ }
+ input {
+     vertical-align: top;
+ }
+ .blockTransaction {
+     padding-left: 1em;
+ }
