@@ -1,37 +1,54 @@
- 
- .block {
-   display: inline-block;
-   width: 300px;
-   background: #00e78d;
-   border-radius: 10px;
-   box-shadow: 5px 5px 5px #00a74d;
-   margin: 3px;
-   margin-bottom: 1em;
-   padding: 5px;
- }
- 
- .block .transaction {
-     color:black;
-     background:#00e78d;
- }
- 
- .transaction {
-   display: inline-block;
-   /*width:200px;*/
-   background:#dd6a3d;
-   color:white;
-   margin: 2px;
-   padding: 2px;
- }
 
- .blockTransaction {
-     padding-left: 1em;
- }
+.block {
+  display: inline-block;
+  width: 300px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px #00a74d;
+  margin: 3px;
+  margin-bottom: 1em;
+  padding: 5px;
+}
+
+.block:hover, .transaction:hover {
+  box-shadow: 5px 5px 5px #000000;
+}
  
- input {
-     vertical-align: top;
- }
+.block, .block .transaction {
+  color:black;
+  background:#00e78d;
+  box-shadow: none;
+}
+
+.block.selected, .block.selected .transaction {
+    color:black;
+    background:#00b74d;
+}
  
+.transaction {
+  display: inline-block;
+  /*width:200px;*/
+   
+   border-radius: 6px;
+   background:#b4c4fc;
+   color:black;
+   margin: 2px;
+   padding: 3px;
+   box-shadow: 5px 5px 5px #7484bc;
+   
+}
+
+.transaction.selected {
+   background:#8ba3f9;
+}
+
+.blockTransaction {
+    padding-left: 1em;
+}
+
+input {
+    vertical-align: top;
+}
+
 .button {
   display:inline-block;
   padding:0.7em 1.7em;

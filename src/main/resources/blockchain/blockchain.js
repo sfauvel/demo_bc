@@ -15,29 +15,22 @@ const baseColor = {
 		}
 }
 
-const blockStyle = {
-//	  display: 'inline-block',
-//	  width: '300px',
-//	  background: baseColor.rgb(),
-//	  borderRadius: '10px',
-//	  boxShadow: '5px 5px 5px ' + baseColor.shadow(),
-//	  margin: '3px',
-//	  marginBottom: '1em',
-//	  padding: '5px'
-}
-
 class Transaction extends React.Component {
   render() {
-    const tx = this.props.tx
-    return <label className="transaction">{tx.id}: {tx.user}: {tx.x}/{tx.y}</label>
+    const tx = this.props.tx 
+    const className="transaction"+((this.props.selected)?" selected":"");
+    return <label onClick={this.props.handler} className={className}>{tx.id}: {tx.user}: {tx.x}/{tx.y}</label>
   }
 }
 
 class Block extends React.Component {
+	
   render() {
     const block=this.props.block;
+    const className="block"+((this.props.selected)?" selected":"");
+   // console.log(block.id + ":" +this.props.selected)
     return (
-    	<div className="block" style={blockStyle}>
+    	<div className={className} onClick={this.props.handler}>
 	        <div>Block: {block.id} from {block.parentId}</div>
 	        <div className="blockTransaction">
 	        	{block.transactions.map(tx => (<div key={"tx_" + tx.id}><Transaction tx={tx}/></div>))}
@@ -55,7 +48,8 @@ class Blockchain extends React.Component {
         isLoaded: false,
         proofOfWork: 0,
         blocks: [],
-        transactions: []
+        transactions: [],
+        selectedBlock: undefined
       };
       
 
@@ -111,17 +105,17 @@ class Blockchain extends React.Component {
  	   }
  	   
  	   var checkedElements = this.state.checkedElements;
- 	   
+
  	   this.state.transactions.forEach(function(element) {
- 		 if (checkedElements.has("" + element.id)) {
+ 		 if (checkedElements.has(element.id)) {
  			 console.log("Push:" + element.id)
  			 paramsToSend.transactions.push(element)
  		 }
  	   })
  	   
- 	    this.state.blocks.forEach(function(element) {
- 		 if (checkedElements.has("" + element.id)) {
- 			 console.log("Push:" + element.id)
+ 	   var selectedBlock = this.state.selectedBlock;
+ 	   this.state.blocks.forEach(function(element) {
+  		 if (selectedBlock===element.id) {
  			 paramsToSend.blocks.push(element)
  		 }
  	   })
@@ -134,7 +128,7 @@ class Blockchain extends React.Component {
 	   event.preventDefault();
 
 	   var json = this.buildResponse()
-console.log(json);
+	   console.log(json);
 	   var value = parseInt(this.hashCode(json)) % 10
 //	   if (value != 0) {
 //		   alert("Try again !");
@@ -160,20 +154,41 @@ console.log(json);
 	  } else {
 		  this.state.checkedElements.delete(txId);  
 	  }
-	  console.log(this.state.checkedElements)
+//	  console.log(this.state.checkedElements)
   }
   
   isValidate(txId) {
 	  console.log("Check tx: " + txId + " in " + this.state.checkedElements);
 	  return this.state.checkedElements.has(txId);
   }
+
+  handlerTransactionSelection(id, e) {
+    console.log("click:" + id);
+
+    
+    var newSelectedElements = this.state.checkedElements;
+    if (this.state.checkedElements.has(id)) {
+    	newSelectedElements.delete(id);
+    } else {	
+    	newSelectedElements.add(id);
+    }
+    this.setState({ 
+	  checkedElements: newSelectedElements
+	})
+  }	 
   
-	  
+  handlerBlockSelection(id, e) {
+    console.log("click:" + id);
+    
+    this.setState({
+    	selectedBlock: id
+    });
+    
+  }	  
+ 
   render() {
 	  const { isLoaded, blocks, transactions } = this.state;
 	
-  
-	  
 	  if (!isLoaded) {
 	    return <div>Loading...</div>;
 	  } else {
@@ -185,22 +200,18 @@ console.log(json);
 		      <div>
 		        {blocks.map(block => (
 		        		<div key={"bck_" + block.id}  >
-			        		<input type="checkbox" 
-			      				name={block.id} 
-			        			defaultChecked={() => this.isValidate(block.id)} 
-			        			onChange={this.handleCheckedChange.bind(this)} />
-			        		<Block block={block}/>
+			        		<Block block={block} 
+			        			selected={this.state.selectedBlock===block.id}
+			        			handler={(e) => this.handlerBlockSelection(block.id, e)}/>
 		        		</div>
 		        		))}
 		      </div>
 		      <div>
 		      	{transactions.map(tx => (
 		      			<div key={"txcheck_" + tx.id}>
-			      			<input type="checkbox" 
-			      				name={tx.id} 
-			      				defaultChecked={() => this.isValidate(tx.id)} 
-			      				onChange={this.handleCheckedChange.bind(this)} />
-			      			<Transaction tx={tx}/>
+			      			<Transaction tx={tx}
+			      				selected={this.isValidate(tx.id)} 
+			      				handler={(e) => this.handlerTransactionSelection(tx.id, e)}/>
 		      			</div>))}
 		      </div>
 		      <input id="proofOfWork" 
