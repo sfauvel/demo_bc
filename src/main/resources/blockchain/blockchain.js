@@ -16,14 +16,14 @@ const baseColor = {
 }
 
 const blockStyle = {
-	  display: 'inline-block',
-	  width: '300px',
-	  background: baseColor.rgb(),
-	  borderRadius: '10px',
-	  boxShadow: '5px 5px 5px ' + baseColor.shadow(),
-	  margin: '3px',
-	  marginBottom: '1em',
-	  padding: '5px'
+//	  display: 'inline-block',
+//	  width: '300px',
+//	  background: baseColor.rgb(),
+//	  borderRadius: '10px',
+//	  boxShadow: '5px 5px 5px ' + baseColor.shadow(),
+//	  margin: '3px',
+//	  marginBottom: '1em',
+//	  padding: '5px'
 }
 
 class Transaction extends React.Component {
@@ -38,7 +38,7 @@ class Block extends React.Component {
     const block=this.props.block;
     return (
     	<div className="block" style={blockStyle}>
-	        <div>Block: {block.id}</div>
+	        <div>Block: {block.id} from {block.parentId}</div>
 	        <div className="blockTransaction">
 	        	{block.transactions.map(tx => (<div key={"tx_" + tx.id}><Transaction tx={tx}/></div>))}
 	        </div>
@@ -54,7 +54,7 @@ class Blockchain extends React.Component {
       this.state = {
         isLoaded: false,
         proofOfWork: 0,
-        datablocks: [],
+        blocks: [],
         transactions: []
       };
       
@@ -85,7 +85,7 @@ class Blockchain extends React.Component {
       .then((data) => {
           this.setState({
              isLoaded: true,
-             datablocks: data.blocks,
+             blocks: data.blocks,
              transactions: data.lastTransactions,
              checkedElements: new Set()
            });
@@ -106,16 +106,23 @@ class Blockchain extends React.Component {
   	buildResponse() {
   		var paramsToSend = {
  			   proofOfWork: this.state.proofOfWork,
+ 			   blocks: [],
  			   transactions: []
  	   }
  	   
+ 	   var checkedElements = this.state.checkedElements;
  	   
- 	   var txs = this.state.checkedElements;
+ 	   this.state.transactions.forEach(function(element) {
+ 		 if (checkedElements.has("" + element.id)) {
+ 			 console.log("Push:" + element.id)
+ 			 paramsToSend.transactions.push(element)
+ 		 }
+ 	   })
  	   
- 	   this.state.transactions.forEach(function(tx) {
- 		 if (txs.has("" + tx.id)) {
- 			 console.log("Push:" + tx.id)
- 			 paramsToSend.transactions.push(tx)
+ 	    this.state.blocks.forEach(function(element) {
+ 		 if (checkedElements.has("" + element.id)) {
+ 			 console.log("Push:" + element.id)
+ 			 paramsToSend.blocks.push(element)
  		 }
  	   })
  	   
@@ -127,7 +134,7 @@ class Blockchain extends React.Component {
 	   event.preventDefault();
 
 	   var json = this.buildResponse()
-
+console.log(json);
 	   var value = parseInt(this.hashCode(json)) % 10
 //	   if (value != 0) {
 //		   alert("Try again !");
@@ -163,8 +170,10 @@ class Blockchain extends React.Component {
   
 	  
   render() {
-	  const { isLoaded, datablocks, transactions } = this.state;
+	  const { isLoaded, blocks, transactions } = this.state;
 	
+  
+	  
 	  if (!isLoaded) {
 	    return <div>Loading...</div>;
 	  } else {
@@ -173,9 +182,10 @@ class Blockchain extends React.Component {
     	  <h1>Display Blockchain</h1>
 		      <form onSubmit={this.handleSubmit}>
 		      <div>
-		        {datablocks.map(block => (
+		        {blocks.map(block => (
 		        		<div key={"bck_" + block.id}  >
 			        		<input type="checkbox" 
+			      				name={block.id} 
 			        			defaultChecked={() => this.isValidate(block.id)} 
 			        			onChange={this.handleCheckedChange.bind(this)} />
 			        		<Block block={block}/>
@@ -202,8 +212,85 @@ class Blockchain extends React.Component {
 	}
 }
 
+class NameForm extends React.Component {
+	  constructor(props) {
+	    super(props);
+	    this.state = {id: '1234', user: 'Jack', x: '123', y: '456'};
+
+	    this.handleChange = this.handleChange.bind(this);
+	    this.handleSubmit = this.handleSubmit.bind(this);
+	  }
+	  handleChange(event) {
+	    this.setState({[event.target.name]: event.target.value});
+	  }
+
+
+	  handleSubmit(event) {
+	    event.preventDefault();
+
+	   fetch('/tx/add', {
+	     method: 'POST',
+	     headers: {
+	    	    'Accept': 'application/json',
+	    	    'Content-Type': 'application/json',
+	    	  },
+		  body: JSON.stringify(this.state)
+	   });
+	  }
+
+	  render() {
+	    return (
+	      <form onSubmit={this.handleSubmit}>
+	      	<div><label> Name: <input name="user" type="text" value={this.state.user} onChange={this.handleChange} /></label></div>
+	      	<div><label> X: <input name="x" type="text" value={this.state.x} onChange={this.handleChange} /></label></div>
+	      	<div><label> Y: <input name="y" type="text" value={this.state.y} onChange={this.handleChange} /></label></div>
+	      	<div><input type="submit" value="Submit" /></div>
+	      </form>
+	    );
+	  }
+	}
+
+class Button extends React.Component {
+	
+	
+	render() {
+		return (<div>{this.props.children}</div>)
+	}
+}
+
+class Onglet extends React.Component {
+	constructor(props) {
+      super(props);
+
+      this.state = {
+        onglet: "A"
+      }
+	}
+      
+	handleClick(event, onglet) {
+	    this.setState({onglet: onglet});
+	  }
+
+	
+    render() {
+    	let content
+    	if ("A" === this.state.onglet) {
+    	    content = <Blockchain />;
+    	  } else {
+    		content = <NameForm />;
+    	  }
+    	return (
+   	  		<div>
+   	  		<Button onClick={(e) => this.handleClick(e, "A")}>Blockchain</Button>
+   	  		<input type="button" value="Blockchain" onClick={(e) => this.handleClick(e, "A")}/>
+   	  		<input type="button" value="Add transaction" onClick={(e) => this.handleClick(e, "B")} />
+    	  {content}
+    	  </div>)
+    }
+}
+
 
 ReactDOM.render(
-  <Blockchain />,
+  <Onglet />,
   document.getElementById('root')
 )

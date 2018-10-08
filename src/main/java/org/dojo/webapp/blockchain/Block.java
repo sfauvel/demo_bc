@@ -7,9 +7,11 @@ public class Block {
 
     final List<Transaction> transactions;
     final long id;
+    private final long parentId;
 
-    public Block(long id, List<Transaction> transactions) {
+    public Block(long id, long parentId, List<Transaction> transactions) {
         this.id = id;
+        this.parentId = parentId;
         this.transactions = Collections.unmodifiableList(transactions);
     }
 
@@ -20,5 +22,10 @@ public class Block {
     
     public long getId() {
         return id;
+    }
+
+
+    public long getParentId() {
+        return parentId;
     }
 }

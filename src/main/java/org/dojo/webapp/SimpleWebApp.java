@@ -2,6 +2,7 @@ package org.dojo.webapp;
 
 import static org.dojo.webapp.adapter.JsonAdapter.blockToJson;
 import static org.dojo.webapp.adapter.JsonAdapter.jsonToTransaction;
+import static org.dojo.webapp.adapter.JsonAdapter.jsonToBlock;
 import static org.dojo.webapp.adapter.JsonAdapter.transactionToJson;
 
 import java.io.BufferedReader;
@@ -37,16 +38,26 @@ public class SimpleWebApp {
     }
     
     public static void main(String[] args) throws IOException {
-        Block b1 = new Block(5, Arrays.asList(
-                new Transaction(1, "Bob", 2, 45),
-                new Transaction(2, "Bob", 34, 67)));
-        Block b2 = new Block(7, Arrays.asList(
-                new Transaction(3, "John", 52, 32),
-                new Transaction(4, "Bob", 43, 87)));
-
-        SimpleWebApp webapp = new SimpleWebApp(8080, new BlockChain(Arrays.asList(b1, b2)));
+        BlockChain blockChain = buildBlockChain();
+        SimpleWebApp webapp = new SimpleWebApp(8080, blockChain);
 
         webapp.start();
+    }
+
+    private static BlockChain buildBlockChain() {
+        Block b1 = new Block(5, 0, Arrays.asList(
+                new Transaction(1, "Bob", 2, 45),
+                new Transaction(2, "Bob", 34, 67)));
+        Block b2 = new Block(7, 5, Arrays.asList(
+                new Transaction(3, "John", 52, 32),
+                new Transaction(4, "Bob", 43, 87)));
+        Block b3 = new Block(8, 5, Arrays.asList(
+                new Transaction(3, "John", 52, 33)));
+        Block b4 = new Block(9, 8, Arrays.asList(
+                new Transaction(3, "John", 52, 34)));
+
+        BlockChain blockChain = new BlockChain(Arrays.asList(b1, b2, b3, b4));
+        return blockChain;
     }
 
     private int port;
@@ -104,11 +115,14 @@ public class SimpleWebApp {
                         .map(json -> jsonToTransaction((JSONObject) json))
                         .collect(Collectors.toList());
                 
+                List<JSONObject> jsonObjectList = getJSONObjectList(jsonObject, "blocks");
+                Block block = jsonToBlock(jsonObjectList.get(0));
+                
                 Set<Long> txValidate = transactionList.stream().map(tx -> tx.getId()).collect(Collectors.toSet());
                 waitingTransaction.removeIf(tx -> txValidate.contains(tx.getId()));
                 
                 List<Block> blockList = new ArrayList(blockchain.getBlocks());
-                blockList.add(new Block(timestamp(), transactionList));
+                blockList.add(new Block(timestamp(), block.getId(), transactionList));
                 blockchain = new BlockChain(blockList);
             }
 

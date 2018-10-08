@@ -28,10 +28,10 @@ class NameForm extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-      	<label> Name: <input name="user" type="text" value={this.state.user} onChange={this.handleChange} /></label>
-        <label> X: <input name="x" type="text" value={this.state.x} onChange={this.handleChange} /></label>
-        <label> Y: <input name="y" type="text" value={this.state.y} onChange={this.handleChange} /></label>
-        <input type="submit" value="Submit" />
+      	<div><label> Name: <input name="user" type="text" value={this.state.user} onChange={this.handleChange} /></label></div>
+      	<div><label> X: <input name="x" type="text" value={this.state.x} onChange={this.handleChange} /></label></div>
+      	<div><label> Y: <input name="y" type="text" value={this.state.y} onChange={this.handleChange} /></label></div>
+      	<div><input type="submit" value="Submit" /></div>
       </form>
     );
   }

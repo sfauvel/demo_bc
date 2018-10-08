@@ -1,5 +1,6 @@
 package org.dojo.webapp.handler;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -23,8 +24,16 @@ public class FileHandler implements HttpHandler {
     public void handle(HttpExchange he) throws IOException {
         URI requestURI = he.getRequestURI();
         Path fileToLoad = SRC_MAIN_RESOURCES.resolve(requestURI.toString().substring(1));
-        System.out.println("File handler:"  + fileToLoad);
-
+        System.out.println("GET:" +requestURI.toString());
+        System.out.println("  -> " +fileToLoad.toAbsolutePath());
+        if (!isValidFile(fileToLoad.toFile())) {
+            fileToLoad = SRC_MAIN_RESOURCES.resolve("blockchain/index.html");
+            System.out.println("File not exists");
+            System.out.println("GET:" +fileToLoad.toString());
+            System.out.println("  -> " +fileToLoad.toAbsolutePath());
+            
+        }
+        
         Stream<String> lines = Files.lines(fileToLoad);
         String response = lines.collect(Collectors.joining("\n"));
 
@@ -32,5 +41,9 @@ public class FileHandler implements HttpHandler {
         OutputStream os = he.getResponseBody();
         os.write(response.getBytes());
         os.close();
+    }
+
+    private boolean isValidFile(File fileToLoad) {
+        return fileToLoad.exists() && fileToLoad.isFile();
     }
 }
