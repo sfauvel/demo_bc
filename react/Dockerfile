@@ -7,8 +7,8 @@ WORKDIR /usr/src/app
 
 ## install and cache app dependencies
 
-RUN npm install -g webpack webpack-cli
+RUN npm install -g webpack
+RUN npm install -g webpack-cli
 
 ## start app
-#CMD ["npm", "test"]
-CMD ["webpack"]
+CMD ["npm", "install"]
