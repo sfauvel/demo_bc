@@ -240,12 +240,16 @@ class Blockchain extends React.Component {
     	  <h1>Blockchain</h1>
     	  <div></div>
 		      <form onSubmit={this.handleSubmit}>
-		      <label>Proof of work</label><input id="proofOfWork"
-		    	  	size="6"
-		    	  	value={this.state.proofOfWork} 
-		      		onChange={this.handleProofOfWorkChange.bind(this)}/>
-		      <input type="submit" className="button" value="Submit" />
 		      <div>
+			      <label width="100%" >Proof of work</label>
+			      <input id="proofOfWork"
+			    	  	type="text"
+			    	  	size="3"
+			    	  	value={this.state.proofOfWork} 
+			      		onChange={this.handleProofOfWorkChange.bind(this)}/>
+			      <input type="submit" className="button" value="Submit" />
+		      </div>
+		    	  <div>
 		      	{transactions.map(tx => (
 		      			<div key={"txcheck_" + tx.id}>
 			      			<Transaction tx={tx}
@@ -299,11 +303,11 @@ class NameForm extends React.Component {
 
 	  render() {
 	    return (
-	      <form onSubmit={this.handleSubmit}>
-	      	<div><label> Name: <input name="user" type="text" value={this.state.user} onChange={this.handleChange} /></label></div>
-	      	<div><label> X: <input name="x" type="text" value={this.state.x} onChange={this.handleChange} /></label></div>
-	      	<div><label> Y: <input name="y" type="text" value={this.state.y} onChange={this.handleChange} /></label></div>
-	      	<div><input type="submit" value="Submit" /></div>
+	      <form id="addTxForm" onSubmit={this.handleSubmit}>
+	      	<div><div><label>Name</label></div><input size="15" name="user" type="text" value={this.state.user} onChange={this.handleChange} /></div>
+	      	<div><div><label>X</label></div><input size="15" name="x" type="text" value={this.state.x} onChange={this.handleChange} /></div>
+	      	<div><div><label>Y</label></div><input size="15" name="y" type="text" value={this.state.y} onChange={this.handleChange} /></div>
+	      	<div><input type="submit" className="button" value="Submit" /></div>
 	      </form>
 	    );
 	  }

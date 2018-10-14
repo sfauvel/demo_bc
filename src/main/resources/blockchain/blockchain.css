@@ -2,6 +2,29 @@ label {
     margin-right: 1em;
 }
 
+#addTxForm div div {
+	
+  display: inline-block;
+  width: 4em;
+}
+
+#addTxForm input {
+    width: 7em;
+}
+
+#addTxForm label {
+    width: 5em;
+    align:right;
+}
+
+input[type=text]{
+    border: 1px solid #ccc !important;
+    box-shadow:1px 1px 1px #D83F3D;
+    padding:0.3em 1em;
+    /*margin:0 0.3em 0.3em 0;*/
+    line-height: 2em;
+ }
+
 .block {
   display: inline-block;
   width: 300px;
