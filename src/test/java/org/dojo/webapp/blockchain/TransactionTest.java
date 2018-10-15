@@ -1,19 +1,23 @@
 package org.dojo.webapp.blockchain;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.json.JSONObject;
 import org.junit.Test;
 
-public class TransactionTest {
+import com.google.gson.Gson;
 
+public class TransactionTest {
+    private Gson gson = new Gson();
+    
     @Test
-    public void createJsonFromBean() throws Exception {
-        Transaction transaction = new Transaction(123,  "Bob", 4, 7);
-        String json = new JSONObject(transaction).toString();
-        assertEquals("{\"x\":4,\"y\":7,\"id\":123,\"user\":\"Bob\"}", json);
- 
-        JSONObject jsonObject = new JSONObject(json);
-        assertEquals("Bob", jsonObject.get("user"));
+    public void createJsonFromBeanWithGson() throws Exception {
+        String json = gson.toJson(new Transaction(123, "Bob", 4, 7));  
+        
+        final Transaction transaction = gson.fromJson(json, Transaction.class);
+        assertEquals("Bob", transaction.getUser());
+        assertEquals(4, transaction.getX());
+        assertEquals(7, transaction.getY());
+        assertEquals(123, transaction.getId());
+        
     }
 }

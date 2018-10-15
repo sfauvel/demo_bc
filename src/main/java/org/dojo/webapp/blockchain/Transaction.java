@@ -30,5 +30,10 @@ public class Transaction {
     public int getY() {
         return y;
     }
+    
+    @Override
+    public String toString() {
+        return id + ": " + user + " " + x + "/" + y;
+    }
 
 }

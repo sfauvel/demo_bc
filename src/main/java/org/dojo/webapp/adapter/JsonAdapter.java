@@ -8,19 +8,23 @@ import org.dojo.webapp.blockchain.Transaction;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+
 public class JsonAdapter {
-    public static Transaction jsonToTransaction(Long timestamp, JSONObject jsonObject) {
+    private static Gson gson = new Gson();
+
+    
+    public static Transaction jsonToTransaction(Long timestamp, String json) {
         Long id = timestamp; 
-        String user = jsonObject.getString("user");
-        int x = jsonObject.getInt("x");
-        int y = jsonObject.getInt("y");
-        Transaction tx = new Transaction(id, user, x, y);
-        System.out.println(id + ": " + user + " " + x + "/" + y);
+        Transaction jsonTx = jsonToTransaction(json);
+    
+        Transaction tx = new Transaction(id, jsonTx.getUser(), jsonTx.getX(), jsonTx.getY());
+        System.out.println(tx);
         return tx;
     }
 
-    public static Transaction jsonToTransaction(JSONObject jsonObject) {
-        return jsonToTransaction(jsonObject.getLong("id"), jsonObject);
+    public static Transaction jsonToTransaction(String json) {
+        return gson.fromJson(json, Transaction.class);
     }
     
     public static Block jsonToBlock(Long timestamp, JSONObject jsonObject) {

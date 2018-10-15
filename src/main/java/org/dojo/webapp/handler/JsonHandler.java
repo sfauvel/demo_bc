@@ -17,15 +17,20 @@ import com.sun.net.httpserver.HttpHandler;
 public abstract class JsonHandler implements HttpHandler {
 
     public JSONObject jsonBody(HttpExchange he) {
+        return new JSONObject(jsonStringBody(he));
+    }
+
+    public String jsonStringBody(HttpExchange he) {
         String body = new BufferedReader(new InputStreamReader(he.getRequestBody()))
                 .lines()
                 .collect(Collectors.joining("\n"));
     
         System.out.println(body);
-        JSONObject jsonObject = new JSONObject(body);
-        return jsonObject;
+        return body;
     }
 
+    
+    
     public void sendResponse(HttpExchange he, String response) throws IOException {
         he.getResponseHeaders().add("Content-Type", "application/json");
         he.getResponseHeaders().set("Access-Control-Allow-Origin", "*");

@@ -2,7 +2,6 @@ package org.dojo.webapp;
 
 import static org.dojo.webapp.adapter.JsonAdapter.blockToJson;
 import static org.dojo.webapp.adapter.JsonAdapter.jsonToTransaction;
-import static org.dojo.webapp.adapter.JsonAdapter.jsonToBlock;
 import static org.dojo.webapp.adapter.JsonAdapter.transactionToJson;
 
 import java.io.BufferedReader;
@@ -14,7 +13,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.dojo.webapp.blockchain.Block;
@@ -24,6 +22,7 @@ import org.dojo.webapp.handler.FileHandler;
 import org.dojo.webapp.handler.JsonHandler;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -75,9 +74,9 @@ public class SimpleWebApp {
         server = HttpServer.create(new InetSocketAddress(port), 0);
         System.out.println("server started at " + port);
         // server.createContext("/html", new HtmlHandler());
-        server.createContext("/tx/add", new TxAddHandler());
+        server.createContext("/tx/add", new TxAddHandler(blockchain));
         server.createContext("/tx/view", new TxViewHandler());
-        server.createContext("/bc/validate", new BcValidateHandler());
+        server.createContext("/bc/validate", new BcValidateHandler(blockchain));
         server.createContext("/bc/view", new BcViewHandler());
         server.createContext("/blockchain", new FileHandler(Paths.get("src/main/resources")));
         server.setExecutor(null);
@@ -88,49 +87,7 @@ public class SimpleWebApp {
         server.stop(0);
     }
 
-    private static List<Transaction> waitingTransaction = new ArrayList<Transaction>();
-
-    public class TxAddHandler extends JsonHandler {
-
-        @Override
-        public void handle(HttpExchange he) throws IOException {
-            System.out.println("SimpleWebApp.TxAddHandler.handle()");
-            String requestMethod = he.getRequestMethod();
-            if (requestMethod.equalsIgnoreCase("POST")) {
-                waitingTransaction.add(jsonToTransaction(timestamp(), jsonBody(he)));
-            }
-
-            sendResponse(he, "");
-        }
-
-    }
-
-    public class BcValidateHandler extends JsonHandler {
-
-        @Override
-        public void handle(HttpExchange he) throws IOException {
-            System.out.println("SimpleWebApp.BcValidateHandler.handle()");
-            String requestMethod = he.getRequestMethod();
-            if (requestMethod.equalsIgnoreCase("POST")) {
-                JSONObject jsonObject = jsonBody(he);
-                List<Transaction> transactionList = getJSONObjectList(jsonObject, "transactions").stream()
-                        .map(json -> jsonToTransaction((JSONObject) json))
-                        .collect(Collectors.toList());
-                
-                List<JSONObject> jsonObjectList = getJSONObjectList(jsonObject, "blocks");
-                Block block = jsonToBlock(jsonObjectList.get(0));
-                
-                Set<Long> txValidate = transactionList.stream().map(tx -> tx.getId()).collect(Collectors.toSet());
-                waitingTransaction.removeIf(tx -> txValidate.contains(tx.getId()));
-                
-                List<Block> blockList = new ArrayList(blockchain.getBlocks());
-                blockList.add(new Block(timestamp(), block.getId(), transactionList));
-                blockchain = new BlockChain(blockList);
-            }
-
-            sendResponse(he, "");
-        }
-    }
+    static List<Transaction> waitingTransaction = new ArrayList<Transaction>();
 
     public class TxViewHandler extends JsonHandler {
 
@@ -155,17 +112,13 @@ public class SimpleWebApp {
             System.out.println("SimpleWebApp.BcViewHandler.handle()");
             String requestMethod = he.getRequestMethod();
             if (requestMethod.equalsIgnoreCase("POST")) {
-                waitingTransaction.add(jsonToTransaction(timestamp(), jsonBody(he)));
+                
+                waitingTransaction.add(jsonToTransaction(timestamp(), jsonStringBody(he)));
+             //   waitingTransaction.add(jsonToTransaction(timestamp(), jsonBody(he)));
             }
-            
-            JSONObject bcjson = new JSONObject();
-            bcjson.put("blocks",
-                    blockchain.getBlocks().stream().map(block -> blockToJson(block)).collect(Collectors.toList()));
-            bcjson.put("lastTransactions",
-                    waitingTransaction.stream().map(tx -> transactionToJson(tx)).collect(Collectors.toList()));
 
-            String response = bcjson.toString();
-            sendResponse(he, bcjson.toString());
+            sendResponse(he, new Gson().toJson(blockchain));
+            
         }
     }
 }

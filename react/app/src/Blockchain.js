@@ -44,7 +44,7 @@ export default class Blockchain extends React.Component {
           this.setState({
              isLoaded: true,
              blocks: data.blocks.reverse(),
-             transactions: data.lastTransactions,
+             transactions: data.transactions,
              checkedElements: new Set(),
              selectedBlock: undefined
            });
@@ -184,6 +184,23 @@ export default class Blockchain extends React.Component {
 	  return hash;
 	}
   
+  transactionsNotInABlock() {
+	  let ids = new Set();
+	  this.state.blocks.forEach(function(block) {
+		  block.transactions.forEach(function(tx) {
+			  ids.add(tx.id);
+		  })
+	  })
+	  let validatedTransactions = [];
+	  this.state.transactions.forEach(function(tx) {
+		  if (!ids.has(tx.id)) {
+			  validatedTransactions.push(tx);
+		  }
+	  })
+	  
+	  return validatedTransactions;
+  }
+  
   render() {
 	  const { isLoaded, blocks, transactions } = this.state;
 	
@@ -205,7 +222,7 @@ export default class Blockchain extends React.Component {
 			      <input type="submit" className="button" value="Submit" />
 		      </div>
 		    	  <div>
-		      	{transactions.map(tx => (
+		      	{this.transactionsNotInABlock().map(tx => (
 		      			<div key={"txcheck_" + tx.id}>
 			      			<Transaction tx={tx}
 			      				selected={this.isValidate(tx.id)} 
