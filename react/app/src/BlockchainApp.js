@@ -1,8 +1,8 @@
 import React from 'react'
 
-import MyLabel from './ReactComp'
+import Onglet from './Onglet'
 
 ReactDOM.render(
-  <MyLabel />,
+  <Onglet />,
   document.getElementById('root')
 )
