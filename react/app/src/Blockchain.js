@@ -113,12 +113,16 @@ export default class Blockchain extends React.Component {
   }
   
   isValidate(txId) {
-	  console.log("Check tx: " + txId + " in " + this.state.checkedElements);
+	  let ce = this.state.checkedElements;
+//	  console.log("Check tx: " + txId + " in " + this.state.checkedElements);
+//	  this.state.checkedElements.forEach(function(elt) {
+//		  console.log("  - " + elt + ":" + ce.has(txId));
+//	  })
 	  return this.state.checkedElements.has(txId);
   }
 
   handlerTransactionSelection(id, e) {
-    console.log("click:" + id);
+//    console.log("click:" + id);
 
     
     var newSelectedElements = this.state.checkedElements;
@@ -133,7 +137,7 @@ export default class Blockchain extends React.Component {
   }	 
   
   handlerBlockSelection(id, e) {
-    console.log("click:" + id);
+//    console.log("click:" + id);
     
     this.setState({
     	selectedBlock: id

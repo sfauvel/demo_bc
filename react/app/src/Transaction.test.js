@@ -19,28 +19,29 @@ const tx = {
 };
 
 test("Transaction content", () => {
-  const instance = buildJsx(<Transaction tx={tx}/>);
-  expect(instance.state.content).toBe("..6789 Bob:34/67");
-})
-
-test("Transaction className", () => {
-  const instance = buildJsx(<Transaction tx={tx}/>);
-
-  expect(instance.state.className).toBe("transaction");
-})
-
-test("Transaction className selected", () => {
-  const instance = buildJsx(<Transaction tx={tx} selected/>);
-  expect(instance.state.className).toBe("transaction selected");
-})
-
-
-test("Transaction with enzyme", () => {
 	const product = shallow(<Transaction tx={tx} selected/>);
 	console.log(product.debug());
   
 	expect(product.debug()).toEqual(
 			expect.stringContaining("..6789 Bob:34/67")
+	);
+})
+
+test("Transaction classname not selected", () => {
+	const product = shallow(<Transaction tx={tx}/>);
+	console.log(product.debug());
+  
+	expect(product.debug()).toEqual(
+			expect.not.stringContaining("selected")
+	);
+})
+
+test("Transaction classname selected", () => {
+	const product = shallow(<Transaction tx={tx} selected/>);
+	console.log(product.debug());
+  
+	expect(product.debug()).toEqual(
+			expect.stringContaining("transaction selected")
 	);
 })
  
