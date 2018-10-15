@@ -4,7 +4,7 @@ module.exports = {
   entry: './src/BlockchainApp.js',
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: 'bundle.js'
+    filename: 'blockchain.js'
   },
   mode: 'production',
   module: {
