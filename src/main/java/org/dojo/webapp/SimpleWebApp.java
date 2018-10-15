@@ -20,7 +20,6 @@ import org.dojo.webapp.blockchain.BlockChain;
 import org.dojo.webapp.blockchain.Transaction;
 import org.dojo.webapp.handler.FileHandler;
 import org.dojo.webapp.handler.JsonHandler;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
@@ -75,7 +74,6 @@ public class SimpleWebApp {
         System.out.println("server started at " + port);
         // server.createContext("/html", new HtmlHandler());
         server.createContext("/tx/add", new TxAddHandler(blockchain));
-        server.createContext("/tx/view", new TxViewHandler());
         server.createContext("/bc/validate", new BcValidateHandler(blockchain));
         server.createContext("/bc/view", new BcViewHandler());
         server.createContext("/blockchain", new FileHandler(Paths.get("src/main/resources")));
@@ -89,21 +87,6 @@ public class SimpleWebApp {
 
     static List<Transaction> waitingTransaction = new ArrayList<Transaction>();
 
-    public class TxViewHandler extends JsonHandler {
-
-        @Override
-        public void handle(HttpExchange he) throws IOException {
-            System.out.println("SimpleWebApp.TxViewHandler.handle()");
-
-            List<JSONObject> waitingTx = waitingTransaction.stream()
-                    .map(tx -> transactionToJson(tx)).collect(Collectors.toList());
-
-            JSONObject jsonRoot = new JSONObject();
-            jsonRoot.put("waitingTx", waitingTx);
-            String response = jsonRoot.toString();
-            sendResponse(he, response);
-        }
-    }
 
     public class BcViewHandler extends JsonHandler {
 
