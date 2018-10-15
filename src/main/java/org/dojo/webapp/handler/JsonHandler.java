@@ -16,10 +16,6 @@ import com.sun.net.httpserver.HttpHandler;
 
 public abstract class JsonHandler implements HttpHandler {
 
-    public JSONObject jsonBody(HttpExchange he) {
-        return new JSONObject(jsonStringBody(he));
-    }
-
     public String jsonStringBody(HttpExchange he) {
         String body = new BufferedReader(new InputStreamReader(he.getRequestBody()))
                 .lines()
@@ -28,8 +24,6 @@ public abstract class JsonHandler implements HttpHandler {
         System.out.println(body);
         return body;
     }
-
-    
     
     public void sendResponse(HttpExchange he, String response) throws IOException {
         he.getResponseHeaders().add("Content-Type", "application/json");
@@ -40,13 +34,4 @@ public abstract class JsonHandler implements HttpHandler {
         os.close();
     }
 
-    public List<JSONObject> getJSONObjectList(JSONObject jsonObject, String key) {
-        JSONArray jsonArray = jsonObject.getJSONArray(key);
-        List<JSONObject> list = new ArrayList<JSONObject>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            list.add(jsonArray.getJSONObject(i));
-        }
-        return list;
-    }
-    
 }
