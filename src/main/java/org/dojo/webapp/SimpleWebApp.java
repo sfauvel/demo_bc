@@ -1,8 +1,6 @@
 package org.dojo.webapp;
 
-import static org.dojo.webapp.adapter.JsonAdapter.blockToJson;
 import static org.dojo.webapp.adapter.JsonAdapter.jsonToTransaction;
-import static org.dojo.webapp.adapter.JsonAdapter.transactionToJson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
