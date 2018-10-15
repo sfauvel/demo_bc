@@ -4,5 +4,6 @@
 
 /.settings
 
-**/package-json.js
+**/package-lock.json
+
 **/node_modules/
