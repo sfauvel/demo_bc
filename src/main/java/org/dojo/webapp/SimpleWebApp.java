@@ -29,8 +29,12 @@ import com.sun.net.httpserver.HttpServer;
  */
 public class SimpleWebApp {
 
+    private static long startTime = System.currentTimeMillis();
+    
     public static Long timestamp() {
-        return System.currentTimeMillis();
+        long timestamp = System.currentTimeMillis() - startTime;
+        System.out.println(timestamp);
+        return timestamp;
     }
     
     public static void main(String[] args) throws IOException {

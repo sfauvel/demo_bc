@@ -56,7 +56,7 @@ export default class Blockchain extends React.Component {
   	buildResponse() {
   		var paramsToSend = {
  			   proofOfWork: this.state.proofOfWork,
- 			   blocks: [],
+ 			   parentId: this.state.selectedBlock,
  			   transactions: []
  	   }
  	   
@@ -66,13 +66,6 @@ export default class Blockchain extends React.Component {
  		 if (checkedElements.has(element.id)) {
  			 console.log("Push:" + element.id)
  			 paramsToSend.transactions.push(element)
- 		 }
- 	   })
- 	   
- 	   var selectedBlock = this.state.selectedBlock;
- 	   this.state.blocks.forEach(function(element) {
-  		 if (selectedBlock===element.id) {
- 			 paramsToSend.blocks.push(element)
  		 }
  	   })
  	   

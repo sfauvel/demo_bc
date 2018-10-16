@@ -30,8 +30,8 @@ public class BcValidateHandler extends JsonHandler {
 
             String json = jsonStringBody(he);
             Block block = new Gson().fromJson(json, Block.class);
-            
-            blockchain.addBlock(block);
+           
+            blockchain.addBlock( new Block(SimpleWebApp.timestamp(), block.getParentId(), block.getTransactions()));
             
 //            JSONObject jsonObject = jsonBody(he);
 //            List<Transaction> transactionList = getJSONObjectList(jsonObject, "transactions").stream()
