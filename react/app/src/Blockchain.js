@@ -3,6 +3,7 @@
 import React from 'react'
 import Block from './Block'
 import Transaction from './Transaction'
+import {hashCode} from './Tools'
 
 export default class Blockchain extends React.Component {
   constructor(props) {
@@ -84,7 +85,7 @@ export default class Blockchain extends React.Component {
 
 	   var json = this.buildResponse()
 	   console.log(json);
-	   var value = parseInt(this.hashCode(json)) % 2
+	   var value = parseInt(hashCode(json)) % 2
 	   if (value != 0) {
 		   alert("Try again !");
 		   return;
@@ -175,18 +176,6 @@ export default class Blockchain extends React.Component {
 //	  return branch;
 	  return 1;
   }
-  
-  
-  hashCode(text) {
-	  var hash = 0, i, chr;
-	  if (text.length === 0) return hash;
-	  for (i = 0; i < text.length; i++) {
-	    chr   = text.charCodeAt(i);
-	    hash  = ((hash << 5) - hash) + chr;
-	    hash |= 0; // Convert to 32bit integer
-	  }
-	  return hash;
-	}
   
   transactionsNotInABlock() {
 	  let ids = new Set();
