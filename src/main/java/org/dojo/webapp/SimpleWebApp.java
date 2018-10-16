@@ -78,7 +78,7 @@ public class SimpleWebApp {
         server.createContext("/tx/add", new TxAddHandler(blockchain));
         server.createContext("/bc/validate", new BcValidateHandler(blockchain));
         server.createContext("/bc/view", new BcViewHandler());
-        server.createContext("/blockchain", new FileHandler(Paths.get("src/main/resources")));
+        server.createContext("/", new FileHandler(Paths.get("src/main/resources/blockchain")));
         server.setExecutor(null);
         server.start();
     }

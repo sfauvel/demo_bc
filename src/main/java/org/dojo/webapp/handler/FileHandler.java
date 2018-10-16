@@ -27,7 +27,7 @@ public class FileHandler implements HttpHandler {
         System.out.println("GET:" +requestURI.toString());
         System.out.println("  -> " +fileToLoad.toAbsolutePath());
         if (!isValidFile(fileToLoad.toFile())) {
-            fileToLoad = SRC_MAIN_RESOURCES.resolve("blockchain/index.html");
+            fileToLoad = SRC_MAIN_RESOURCES.resolve("index.html");
             System.out.println("File not exists");
             System.out.println("GET:" +fileToLoad.toString());
             System.out.println("  -> " +fileToLoad.toAbsolutePath());
