@@ -2,6 +2,10 @@
 	max-width: 400px;
 }
 
+.about {
+	text-align: justify;
+}
+
 label {
     margin-right: 1em;
     text-align: right;
@@ -150,6 +154,15 @@ input[type=text], input[type=number]{
    background:#8ba3f9;
 }
 
+.validTx {
+	visibility:hidden;
+}
+
+.invalidTx {
+	margin-left:5px;
+	font-weight: bold;
+	color: red;
+}
 
 .selected {
     box-shadow: 5px 5px 5px #000000;

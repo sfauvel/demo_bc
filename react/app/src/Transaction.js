@@ -9,8 +9,16 @@ export default class Transaction extends React.Component {
   }
 
   render() {
-	const className = "transaction"+((this.props.selected)?" selected":"")
-    const content = trunkId(this.props.tx.id) + ": " + (this.props.tx.user) + ":" + (this.props.tx.x) + "/" + (this.props.tx.y)
-    return <label onClick={this.props.handler} className={className}>{content}</label>
+
+	const isValid = (this.props.tx.x) > (this.props.tx.y);
+	const className = "transaction"
+		+((this.props.selected)?" selected":"")
+		+(isValid?" valid":" invalid")
+	const content = trunkId(this.props.tx.id) + " - " + (this.props.tx.user) + " " + (this.props.tx.x) + "/" + (this.props.tx.y) 
+    
+	return (<div>
+		<label onClick={this.props.handler} className={className}>{content}<span className={isValid?"validTx":"invalidTx"}>!</span></label>
+		
+		</div>)
   }
 }

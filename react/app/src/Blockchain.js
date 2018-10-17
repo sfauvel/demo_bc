@@ -76,7 +76,7 @@ export default class Blockchain extends React.Component {
 
  	   this.state.transactions.forEach(function(element) {
  		 if (checkedElements.has(element.id)) {
- 			 console.log("Push:" + element.id)
+ 			// console.log("Push:" + element.id)
  			 paramsToSend.transactions.push(element)
  		 }
  	   })
@@ -89,7 +89,7 @@ export default class Blockchain extends React.Component {
 	   event.preventDefault();
 
 	   var json = this.buildResponse()
-	   console.log(json);
+	  // console.log(json);
 	   if (!json.parentId) {
 		   alert("Select a parent block !");
 		   return;
@@ -150,7 +150,7 @@ export default class Blockchain extends React.Component {
   }	 
   
   handlerBlockSelection(id, e) {
-    console.log("click:" + id);
+    //console.log("click:" + id);
     
     this.setState({
     	selectedBlock: id
@@ -200,7 +200,6 @@ export default class Blockchain extends React.Component {
 
 	  selectedBlocks.forEach(function(blockId) {
 		  let block = blocksMap[blockId];
-		  console.log(block)
 		  block.transactions.forEach(function(tx) {
 			  ids.add(tx.id);
 		  })

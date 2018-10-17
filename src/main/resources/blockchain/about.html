@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Blockchain</title>
+    <style>
+    .block {
+      width:200px;
+      background:#00e78d;
+      margin: 3px;
+      margin-bottom: 1em;
+      padding: 5px;
+    }
+    </style>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+    <script type="text/babel" src="./add_transaction.js"></script>
+  </head>
+  <body>
+    <div id="root">
+ Blockchain
+
+ L'utilisateur soumet des transactions en indiquant un nom et des coordonnées X et Y. 
+ La valeur X doit être supérieure à la valeur Y.
+ L'application ne contrôle pas cette contrainte, ce sera le rôle des mineurs de le faire.
+ 
+ Les mineurs visualisent la blockchain. 
+ Ils sélectionnent le dernier bloc qu'il considère valide ainsi que les transactions qu'ils veulent inclure au prochain bloc.
+ Pour les aider, un symbole '!' signale les transactions invalides (X inférieur ou égal à  Y)
+ Le choix d'un bloc met en évidence la liste des blocs dont il est issue.        
+ 
+ Ils doivent également indiquer un chiffre avant de soumettre leur bloc.
+ Les valeurs acceptable sont déterminées par les données soumises mais elles ne sont pas prédictible.
+ Le mineur peut faire autant de tentatives qu'il souhaite jusqu'à trouver un valeur acceptable.
+    </div>
+  </body>
+</html>
