@@ -32,7 +32,7 @@ export default class Onglet extends React.Component {
 				<div className="bar" >
 	       	  		<a className={"baritem" + (this.state.onglet==='A'?" selected":"")} onClick={(e) => this.handleClick(e, "A")}>Blockchain</a>
 	       	  		<a className={"baritem" + (this.state.onglet==='B'?" selected":"")} onClick={(e) => this.handleClick(e, "B")}>Transaction</a>
-	       	  		<a className={"baritem" + (this.state.onglet==='C'?" selected":"")} onClick={(e) => this.handleClick(e, "C")}>?</a>
+	       	  		<a className={"baritem about" + (this.state.onglet==='C'?" selected":"")} onClick={(e) => this.handleClick(e, "C")}>?</a>
 	        	</div>
 	        	{content}
     	</div>)
