@@ -111,6 +111,68 @@ test("Should find block in selected chain", () => {
   expect(instance.getBlockInSelectedChain().has(3)).toBe(false);
 })
 
+test("Should find head block when only one", () => {
+  const instance = buildJsx(<Blockchain/>);
+  const dataBlocks = [createBlock(1, 0)];
+  instance.setState({
+	  blocks: dataBlocks,
+	  blocksMap: instance.buildBlocksMap(dataBlocks)
+  });
+  expect(instance.getHeadBlock()).toBe(1);
+})
+
+test("Should find head block when a chain", () => {
+  const instance = buildJsx(<Blockchain/>);
+  const dataBlocks = [createBlock(1, 0), createBlock(2, 1), createBlock(3, 2)];
+  instance.setState({
+	  blocks: dataBlocks,
+	  blocksMap: instance.buildBlocksMap(dataBlocks)
+  });
+  expect(instance.getHeadBlock()).toBe(3);
+})
+
+test("Should find one head block when there is two", () => {
+  const instance = buildJsx(<Blockchain/>);
+  const dataBlocks = [createBlock(1, 0), createBlock(2, 1), createBlock(3, 2), createBlock(4, 2)];
+  instance.setState({
+	  blocks: dataBlocks,
+	  blocksMap: instance.buildBlocksMap(dataBlocks)
+  });
+  const head = instance.getHeadBlock();
+  expect(head===3 || head===4).toBe(true);
+})
+
+
+test("Should find head block with longest chain when more than one: case A", () => {
+  const instance = buildJsx(<Blockchain/>);
+  const dataBlocks = [createBlock(1, 0), createBlock(2, 1), 
+	  createBlock(30, 2), 
+	  createBlock(31, 30), 
+	  createBlock(32, 31),
+	  createBlock(40, 2),
+	  createBlock(41, 40)];
+  instance.setState({
+	  blocks: dataBlocks,
+	  blocksMap: instance.buildBlocksMap(dataBlocks)
+  });
+  expect(instance.getHeadBlock()).toBe(32);
+})
+
+test("Should find head block with longest chain when more than one: case B", () => {
+  const instance = buildJsx(<Blockchain/>);
+  const dataBlocks = [createBlock(1, 0), createBlock(2, 1), 
+	  createBlock(30, 2), 
+	  createBlock(31, 30),
+	  createBlock(40, 2),
+	  createBlock(41, 40),
+	  createBlock(42, 41)];
+  instance.setState({
+	  blocks: dataBlocks,
+	  blocksMap: instance.buildBlocksMap(dataBlocks)
+  });
+  expect(instance.getHeadBlock()).toBe(42);
+})
+
 
 function buildJsx(jsx) {
   const component = renderer.create(jsx);

@@ -42,13 +42,14 @@ export default class Blockchain extends React.Component {
     fetch('/bc/view')
       .then(res => res.json())
       .then((data) => {
+    	  const blocksMap = this.buildBlocksMap(data.blocks)
           this.setState({
              isLoaded: true,
              blocks: data.blocks.reverse(),
-             blocksMap: this.buildBlocksMap(data.blocks),
+             blocksMap: blocksMap,
              transactions: data.transactions,
              checkedElements: new Set(),
-             selectedBlock: undefined
+             selectedBlock: this.getHeadBlock(data.blocks, blocksMap)
            });
       });
     
@@ -213,10 +214,51 @@ export default class Blockchain extends React.Component {
 	  return validatedTransactions;
   }
   
+  getHeadBlock(blocks = this.state.blocks, blocksMap = this.state.blocksMap) {
+
+	  let parentsId = new Set();
+	  blocks.forEach(function(block) {
+		  parentsId.add(block.parentId)
+	  })
+	  let heads = [];
+	  
+	  let getBlockInChain = this.getBlockInChain;
+	  blocks.forEach(function(block) {
+		  if (!parentsId.has(block.id)) {
+			  heads.push([block.id, getBlockInChain(block.id, blocksMap).size])
+		  }
+	  });
+	  
+	  let max = 0;
+	  let head;
+	  heads.forEach(function(b) {
+		  if (b[1] > max) {
+			  max = b[1];
+			  head = b[0]
+		  }
+	  })
+	  return head;
+  }
+  
   getBlockInSelectedChain() {
-	  let blocksMap = this.state.blocksMap;
-	  let selectedBlock = this.state.selectedBlock;
-	  let currentBlock = blocksMap["" + selectedBlock];
+//	  let blocksMap = this.state.blocksMap;
+//	  let selectedBlock = this.state.selectedBlock;
+//	  let currentBlock = blocksMap["" + selectedBlock];
+//
+//	  let blocksInMap = new Set();
+//	  
+//	  while (currentBlock && currentBlock.id != 0) {
+//		  blocksInMap.add(currentBlock.id);
+//		 
+//		  currentBlock = blocksMap[currentBlock.parentId];
+//	  }
+//	  return blocksInMap;
+//	  
+	  return this.getBlockInChain(this.state.selectedBlock, this.state.blocksMap) 
+  }
+
+  getBlockInChain(blockFrom, blocksMap) {
+	  let currentBlock = blocksMap["" + blockFrom];
 
 	  let blocksInMap = new Set();
 	  
@@ -227,6 +269,7 @@ export default class Blockchain extends React.Component {
 	  }
 	  return blocksInMap;
   }
+
   
   isBlockInSelectedChain(block) {
 	  return this.getBlockInSelectedChain().has(block.id);
