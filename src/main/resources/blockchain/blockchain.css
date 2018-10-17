@@ -1,9 +1,11 @@
 label {
     margin-right: 1em;
+    text-align: right;
 }
 
 body {
 	background-color: #f6ffe4;
+	color:#423B3B;
 }
 .bar {
 	width:100%;
@@ -37,10 +39,23 @@ body {
     background-color: #00b74d;
 }
 
+.content {
+    width:auto;
+    padding: 0.5em;
+}
+
+.content>form>div{
+/*     width:auto; */
+    padding: 0.5em;
+}
+
 #addTxForm div div {
 	
   display: inline-block;
   width: 4em;
+  vertical-align:middle;
+  line-height:2em;
+  text-align: right;
 }
 
 #addTxForm input {
@@ -52,18 +67,25 @@ body {
     align:right;
 }
 
-input[type=text]{
+input[type=text], input[type=number]{
     border: 1px solid #ccc !important;
     box-shadow:1px 1px 1px #D83F3D;
     padding:0.3em 1em;
     /*margin:0 0.3em 0.3em 0;*/
     line-height: 2em;
  }
+ 
+#proofOfWork {
+   width:1em;
+   margin-left:1em;
+   margin-right:1em;
+}
 
 .block {
   display: inline-block;
   opacity: 0.5;
-  width: 300px;
+/*   width: 300px; */
+  width: 100%;
   border-radius: 10px;
   box-shadow: 5px 5px 5px #00a74d;
   margin: 3px;
@@ -76,13 +98,15 @@ input[type=text]{
 }
  
 .block, .block .transaction {
-  color:black;
   background:#00e78d;
   box-shadow: none;
 }
 
+.block .transaction {
+  padding:0px;
+}
+
 .block.selected, .block.selected .transaction {
-    color:black;
     background:#00b74d;
 }
 
@@ -90,16 +114,30 @@ input[type=text]{
 .block.inChain, .block.inChain .transaction {
      opacity: 1;
 }
+
+.blockInfo .transcationBlock {
+	display:inline-block;
+}
  
+#labelProof {
+   display:inline-block;
+   width:4em;
+   text-align:center;
+   padding: 5px;
+   line-height:1em;
+}
+
 .transaction {
   display: inline-block;
   /*width:200px;*/
    
+   width: 80%;
+   float:right;
    border-radius: 6px;
    background:#b4c4fc;
-   color:black;
    margin: 2px;
    padding: 3px;
+   padding-right: 0.5em;
    box-shadow: 5px 5px 5px #7484bc;
    
 }
@@ -124,19 +162,25 @@ input {
 .button {
   display:inline-block;
   padding:0.7em 1.7em;
-  margin:0 0.3em 0.3em 0;
+/*   margin:0 0.3em 0.3em 0; */
+  float:right;
+  margin:0em 0em 0.3em 1em;
   border-radius:0.2em;
   box-sizing: border-box;
   text-decoration:none;
   font-family:'Roboto',sans-serif;
   font-weight:400;
-  color: black;
   background-color:#00e78d;
   box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);
   text-align:center;
   position:relative;
 }
 
+#addTxForm>div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 
 .button:hover {
   background-color:#00b74d;

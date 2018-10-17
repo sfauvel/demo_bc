@@ -19,7 +19,7 @@ export default class Block extends React.Component {
     };
     return (
     	<div className={className} style={branchmargin} onClick={this.props.handler}>
-	        <div>Block: {trunkId(block.id)} from {trunkId(block.parentId)}</div>
+	        <div className="blockInfo">{trunkId(block.id)} ... {trunkId(block.parentId)}</div>
 	        <div className="blockTransaction">
 	        	{block.transactions.map(tx => (<div key={"tx_" + tx.id}><Transaction tx={tx}/></div>))}
 	        </div>

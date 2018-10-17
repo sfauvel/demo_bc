@@ -282,13 +282,12 @@ export default class Blockchain extends React.Component {
 	    return <div>Loading...</div>;
 	  } else {
 	    return (
-	    <div>
+	    <div className="content">
 		      <form onSubmit={this.handleSubmit}>
 		      <div>
-			      <label width="100%" >Proof of work</label>
+			      <div id="labelProof">Proof of work</div>
 			      <input id="proofOfWork"
-			    	  	type="text"
-			    	  	size="3"
+			    	  	type="text" 
 			    	  	value={this.state.proofOfWork} 
 			      		onChange={this.handleProofOfWorkChange.bind(this)}/>
 			      <input type="submit" className="button" value="Submit" />
