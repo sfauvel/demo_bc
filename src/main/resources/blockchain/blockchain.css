@@ -27,6 +27,7 @@ input[type=text]{
 
 .block {
   display: inline-block;
+  opacity: 0.5;
   width: 300px;
   border-radius: 10px;
   box-shadow: 5px 5px 5px #00a74d;
@@ -48,6 +49,10 @@ input[type=text]{
 .block.selected, .block.selected .transaction {
     color:black;
     background:#00b74d;
+}
+
+.block.inChain, .block.inChain .transaction {
+     opacity: 1;
 }
  
 .transaction {

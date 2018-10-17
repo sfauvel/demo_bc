@@ -9,7 +9,9 @@ export default class Block extends React.Component {
   render() {
     const block=this.props.block;
     const branch=this.props.branch-1;
-    const className="block"+((this.props.selected)?" selected":"");
+    const className="block"
+    	+((this.props.selected)?" selected":"")
+    	+((this.props.inChain)?" inChain":"");
    // console.log(block.id + ":" +this.props.selected)
     //style="margin-left:{branch}em"
     const branchmargin = {

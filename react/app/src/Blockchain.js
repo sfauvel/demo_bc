@@ -69,7 +69,7 @@ export default class Blockchain extends React.Component {
  		 }
  	   })
  	   
- 	   return JSON.stringify(paramsToSend);
+ 	   return paramsToSend;
   	
   	}
 	
@@ -78,7 +78,14 @@ export default class Blockchain extends React.Component {
 
 	   var json = this.buildResponse()
 	   console.log(json);
-	   var value = parseInt(hashCode(json)) % 2
+	   if (!json.parentId) {
+		   alert("Select parent block !");
+		   return;
+	   }
+	   
+
+	   const jsonString = JSON.stringify(json);
+	   var value = parseInt(hashCode(jsonString)) % 2
 	   if (value != 0) {
 		   alert("Try again !");
 		   return;
@@ -90,7 +97,7 @@ export default class Blockchain extends React.Component {
 	    	    'Accept': 'application/json',
 	    	    'Content-Type': 'application/json',
 	    	  },
-		  body: json
+		  body: jsonString
 	   });
 	   this.loadBlockchain();
 	  }
@@ -131,7 +138,7 @@ export default class Blockchain extends React.Component {
   }	 
   
   handlerBlockSelection(id, e) {
-//    console.log("click:" + id);
+    console.log("click:" + id);
     
     this.setState({
     	selectedBlock: id
@@ -187,6 +194,31 @@ export default class Blockchain extends React.Component {
 	  return validatedTransactions;
   }
   
+  isBlockInSelectedChain(block) {
+	  console.log("isBlockInSelectedChain " + block.id)
+	  let selectedBlock = this.state.selectedBlock;
+	  const mapParents = {}
+	  this.state.blocks.forEach(function (bck) {
+		 mapParents[bck.id] = bck; 
+	  });
+	  
+	  console.log("selectedBlock:"+ selectedBlock)
+	  let currentBlock = mapParents["" + selectedBlock];
+
+	  if (currentBlock) {console.log("currentBlock:" +currentBlock.id + " ??")};
+	  while (currentBlock && currentBlock.id != 0) {
+		  if (currentBlock.id == block.id) {
+			  console.log(block.id + " " + true);
+			  return true;
+		  }
+		  console.log(mapParents)
+		  currentBlock = mapParents[currentBlock.parentId];
+		  console.log("parent:" + currentBlock );
+	  }
+	  if (currentBlock) {console.log(currentBlock.id + " " + false);}
+	  return false;
+  }
+  
   render() {
 	  const { isLoaded, blocks, transactions } = this.state;
 	
@@ -221,6 +253,7 @@ export default class Blockchain extends React.Component {
 			        		<Block block={block}
 			        			branch={this.blockBranch(block)}
 			        			selected={this.state.selectedBlock===block.id}
+			        			inChain={this.isBlockInSelectedChain(block)}
 			        			handler={(e) => this.handlerBlockSelection(block.id, e)}/>
 		        		</div>
 		        		))}

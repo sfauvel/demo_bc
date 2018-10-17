@@ -23,7 +23,7 @@ test("Transaction content", () => {
 	console.log(product.debug());
   
 	expect(product.debug()).toEqual(
-			expect.stringContaining("..6789 Bob:34/67")
+			expect.stringContaining("6789 Bob:34/67")
 	);
 })
 

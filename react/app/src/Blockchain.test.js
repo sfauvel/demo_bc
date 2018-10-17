@@ -27,6 +27,14 @@ function createTx(id) {
 		};
 }
 
+function createBlock(id, parentId) {
+	return {
+		  id:id,
+		  parentId: parentId
+
+		};
+}
+
 const block = {
   id:"876543",
   transactions: []
@@ -64,6 +72,18 @@ test("Should return transaction not in a block", () => {
   expect(txs.length).toBe(2);
 })
 
+
+test("Should find ancestor of the block", () => {
+  const instance = buildJsx(<Blockchain/>);
+  instance.setState({
+	  blocks: [createBlock(1, 0), createBlock(2, 1), createBlock(3, 2)],
+	  selectedBlock: 2
+  });
+
+  expect(instance.isBlockInSelectedChain(createBlock(1, 0))).toBe(true);
+  expect(instance.isBlockInSelectedChain(createBlock(2, 1))).toBe(true);
+  expect(instance.isBlockInSelectedChain(createBlock(3, 2))).toBe(false);
+})
 
 function buildJsx(jsx) {
   const component = renderer.create(jsx);
