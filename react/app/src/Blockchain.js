@@ -5,6 +5,8 @@ import Block from './Block'
 import Transaction from './Transaction'
 import {hashCode} from './Tools'
 
+const MODULO_PROOF_OF_WORK=5;
+
 export default class Blockchain extends React.Component {
   constructor(props) {
       super(props);
@@ -89,13 +91,13 @@ export default class Blockchain extends React.Component {
 	   var json = this.buildResponse()
 	   console.log(json);
 	   if (!json.parentId) {
-		   alert("Select parent block !");
+		   alert("Select a parent block !");
 		   return;
 	   }
 	   
-
+	   
 	   const jsonString = JSON.stringify(json);
-	   var value = parseInt(hashCode(jsonString)) % 2
+	   const value = parseInt(hashCode(jsonString)) % MODULO_PROOF_OF_WORK;
 	   if (value != 0) {
 		   alert("Try again !");
 		   return;
@@ -156,6 +158,10 @@ export default class Blockchain extends React.Component {
     
   }	  
  
+  handleFocus(event) {
+	  event.target.select();
+  }
+  
   blockBranch(block) {
 //	  console.log("Branch ? " + block.id)
 //	  var branch=1;
@@ -289,7 +295,8 @@ export default class Blockchain extends React.Component {
 			      <input id="proofOfWork"
 			    	  	type="text" 
 			    	  	value={this.state.proofOfWork} 
-			      		onChange={this.handleProofOfWorkChange.bind(this)}/>
+			      		onChange={this.handleProofOfWorkChange.bind(this)}
+			      		onFocus={this.handleFocus}/>
 			      <input type="submit" className="button" value="Submit" />
 		      </div>
 		    	  <div>
