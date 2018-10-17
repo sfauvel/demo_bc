@@ -45,13 +45,22 @@ export default class Blockchain extends React.Component {
           this.setState({
              isLoaded: true,
              blocks: data.blocks.reverse(),
+             blocksMap: this.buildBlocksMap(data.blocks),
              transactions: data.transactions,
              checkedElements: new Set(),
              selectedBlock: undefined
            });
       });
+    
   }
-
+  
+  buildBlocksMap(blocks) {
+	    const blocksMap = {}
+		  blocks.forEach(function (bck) {
+			  blocksMap[bck.id] = bck; 
+		  });	
+	    return blocksMap;
+	}
   
   	buildResponse() {
   		var paramsToSend = {
@@ -178,12 +187,22 @@ export default class Blockchain extends React.Component {
   }
   
   transactionsNotInABlock() {
+	  const blocksMap = this.state.blocksMap;
+	  let selectedBlocks=this.getBlockInSelectedChain()
 	  let ids = new Set();
-	  this.state.blocks.forEach(function(block) {
+
+	  selectedBlocks.forEach(function(blockId) {
+		  let block = blocksMap[blockId];
+		  console.log(block)
 		  block.transactions.forEach(function(tx) {
 			  ids.add(tx.id);
 		  })
 	  })
+//	  this.state.blocks.forEach(function(block) {
+//		  block.transactions.forEach(function(tx) {
+//			  ids.add(tx.id);
+//		  })
+//	  })
 	  let validatedTransactions = [];
 	  this.state.transactions.forEach(function(tx) {
 		  if (!ids.has(tx.id)) {
@@ -194,29 +213,23 @@ export default class Blockchain extends React.Component {
 	  return validatedTransactions;
   }
   
-  isBlockInSelectedChain(block) {
-	  console.log("isBlockInSelectedChain " + block.id)
+  getBlockInSelectedChain() {
+	  let blocksMap = this.state.blocksMap;
 	  let selectedBlock = this.state.selectedBlock;
-	  const mapParents = {}
-	  this.state.blocks.forEach(function (bck) {
-		 mapParents[bck.id] = bck; 
-	  });
-	  
-	  console.log("selectedBlock:"+ selectedBlock)
-	  let currentBlock = mapParents["" + selectedBlock];
+	  let currentBlock = blocksMap["" + selectedBlock];
 
-	  if (currentBlock) {console.log("currentBlock:" +currentBlock.id + " ??")};
+	  let blocksInMap = new Set();
+	  
 	  while (currentBlock && currentBlock.id != 0) {
-		  if (currentBlock.id == block.id) {
-			  console.log(block.id + " " + true);
-			  return true;
-		  }
-		  console.log(mapParents)
-		  currentBlock = mapParents[currentBlock.parentId];
-		  console.log("parent:" + currentBlock );
+		  blocksInMap.add(currentBlock.id);
+		 
+		  currentBlock = blocksMap[currentBlock.parentId];
 	  }
-	  if (currentBlock) {console.log(currentBlock.id + " " + false);}
-	  return false;
+	  return blocksInMap;
+  }
+  
+  isBlockInSelectedChain(block) {
+	  return this.getBlockInSelectedChain().has(block.id);
   }
   
   render() {

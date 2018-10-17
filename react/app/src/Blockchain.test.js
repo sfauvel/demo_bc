@@ -42,19 +42,26 @@ const block = {
 
 test("All transactions are not validate when no block", () => {
   const instance = buildJsx(<Blockchain/>);
+  const dataBlocks = [];
   instance.setState({
-	  transactions: [tx]
+	  transactions: [tx],
+  	  blocks: dataBlocks,
+  	  blocksMap: instance.buildBlocksMap(dataBlocks)
+  	
   });
   let txs = instance.transactionsNotInABlock();
   
   expect(txs.length).toBe(1);
 })
 
-test("All transactions are validate when one block contains all transactions", () => {
+test("All transactions are validate when one block selected contains all transactions", () => {
   const instance = buildJsx(<Blockchain/>);
+  const dataBlocks = [{id:"1",transactions: [tx]}];
   instance.setState({
 	  transactions: [tx],
-	  blocks: [{id:"1",transactions: [tx]}],
+  	  blocks: dataBlocks,
+  	  blocksMap: instance.buildBlocksMap(dataBlocks),
+  	  selectedBlock:1
   });
   let txs = instance.transactionsNotInABlock();
   
@@ -63,9 +70,12 @@ test("All transactions are validate when one block contains all transactions", (
 
 test("Should return transaction not in a block", () => {
   const instance = buildJsx(<Blockchain/>);
+  const dataBlocks = [{id:"1",transactions: [createTx(222)]}];
   instance.setState({
 	  transactions: [createTx(111), createTx(222), createTx(333)],
-	  blocks: [{id:"1",transactions: [createTx(222)]}],
+	  blocks: dataBlocks,
+  	  blocksMap: instance.buildBlocksMap(dataBlocks),
+  	  selectedBlock:1
   });
   let txs = instance.transactionsNotInABlock();
   
@@ -75,8 +85,10 @@ test("Should return transaction not in a block", () => {
 
 test("Should find ancestor of the block", () => {
   const instance = buildJsx(<Blockchain/>);
+  const dataBlocks = [createBlock(1, 0), createBlock(2, 1), createBlock(3, 2)];
   instance.setState({
-	  blocks: [createBlock(1, 0), createBlock(2, 1), createBlock(3, 2)],
+	  blocks: dataBlocks,
+	  blocksMap: instance.buildBlocksMap(dataBlocks),
 	  selectedBlock: 2
   });
 
@@ -84,6 +96,21 @@ test("Should find ancestor of the block", () => {
   expect(instance.isBlockInSelectedChain(createBlock(2, 1))).toBe(true);
   expect(instance.isBlockInSelectedChain(createBlock(3, 2))).toBe(false);
 })
+
+test("Should find block in selected chain", () => {
+  const instance = buildJsx(<Blockchain/>);
+  const dataBlocks = [createBlock(1, 0), createBlock(2, 1), createBlock(3, 2)];
+  instance.setState({
+	  blocks: dataBlocks,
+	  blocksMap: instance.buildBlocksMap(dataBlocks),
+	  selectedBlock: 2
+  });
+  expect(instance.getBlockInSelectedChain().size).toBe(2);
+  expect(instance.getBlockInSelectedChain().has(1)).toBe(true);
+  expect(instance.getBlockInSelectedChain().has(2)).toBe(true);
+  expect(instance.getBlockInSelectedChain().has(3)).toBe(false);
+})
+
 
 function buildJsx(jsx) {
   const component = renderer.create(jsx);
