@@ -14,7 +14,7 @@ export default class Onglet extends React.Component {
       
 	handleClick(event, onglet) {
 	    this.setState({onglet: onglet});
-	  }
+	 }
 
 	
     render() {
@@ -25,10 +25,12 @@ export default class Onglet extends React.Component {
     		content = <NameForm />;
     	  }
     	return (
-    	<div>
-   	  		<input type="button" className="button" value="Blockchain" onClick={(e) => this.handleClick(e, "A")}/>
-   	  		<input type="button" className="button" value="Add transaction" onClick={(e) => this.handleClick(e, "B")} />
-   	  		{content}
+			<div>
+				<div className="bar" >
+	       	  		<a className={"baritem" + (this.state.onglet==='A'?" selected":"")} onClick={(e) => this.handleClick(e, "A")}>Blockchain</a>
+	       	  		<a className={"baritem" + (this.state.onglet==='B'?" selected":"")} onClick={(e) => this.handleClick(e, "B")}>Transaction</a>
+	        	</div>
+			{content}
     	</div>)
     }
 }

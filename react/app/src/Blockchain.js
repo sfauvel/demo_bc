@@ -283,8 +283,6 @@ export default class Blockchain extends React.Component {
 	  } else {
 	    return (
 	    <div>
-    	  <h1>Blockchain</h1>
-    	  <div></div>
 		      <form onSubmit={this.handleSubmit}>
 		      <div>
 			      <label width="100%" >Proof of work</label>
